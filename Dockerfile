@@ -1,24 +1,17 @@
-FROM python:3.6.2-alpine
+FROM python:3.6.2-slim
 
 # set working directory
-# RUN mkdir -p /usr/src/app
-WORKDIR /app
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
 # add requirements (to leverage Docker cache)
-ADD ./requirements.txt /app/requirements.txt
+ADD ./requirements.txt /usr/src/app/requirements.txt
 
 # install requirements
 RUN pip install -r requirements.txt
 
 # add app
-ADD . /app
+ADD . /usr/src/app
 
-RUN addgroup  app \
-  && adduser -D -H -G app app \
-  && chown -R app:app /app
-
-VOLUME /app
-USER app
 # run server
 CMD python manage.py runserver -h 0.0.0.0
-# CMD ls -la 
