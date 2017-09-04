@@ -7,6 +7,15 @@ from project.tests.base import BaseTestCase
 from project import db
 from project.api.models import User
 
+
+# Helper functions
+def add_user(username, email):
+    user = User(username=username, email=email)
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
 class TestUserService(BaseTestCase):
     """Tests for the Users Service."""
 
@@ -87,9 +96,7 @@ class TestUserService(BaseTestCase):
 
     def test_single_user(self):
         """Ensure get single user behaves correctly."""
-        user = User(username='michael', email='michael@realpython.com')
-        db.session.add(user)
-        db.session.commit()
+        user = add_user('michael','michael@realpython.com')
         with self.client:
             response = self.client.get(f'/users/{user.id}')
             data = json.loads(response.data.decode())
